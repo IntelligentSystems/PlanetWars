@@ -32,6 +32,7 @@ public class Planet implements Cloneable {
 	return growthRate;
     }
 
+	// coordinates in the space
     public double X() {
 	return x;
     }
@@ -50,6 +51,7 @@ public class Planet implements Cloneable {
 	this.numShips = newNumShips;
     }
     */
+	
     public void AddShips(int amount) {
 	numShips += amount;
     }
