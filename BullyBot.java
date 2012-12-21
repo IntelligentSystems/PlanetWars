@@ -4,7 +4,7 @@ import java.util.*;
  */
 
 
-public class ProspectorBot {
+public class BullyBot {
     public static void DoTurn(PlanetWars pw) {
 
 	// (1) Find my strongest planet.
