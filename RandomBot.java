@@ -28,7 +28,7 @@ public class RandomBot {
 		if (p.size() > 0) {
 		
 			// (1c) Pick a random integer in [0, number_of_my_planets] 
-			Integer randomSource = r.nextInt(p.size())
+			Integer randomSource = r.nextInt(p.size());
 			
 			// (1d) Pick a random planet as source
 			source = p.get(randomSource);
@@ -43,7 +43,7 @@ public class RandomBot {
 		if (p.size() > 0) {
 			
 			// (2b) Pick a random integer in [0, number_of_all_planets] 
-			Integer randomTarget = r.nextInt(p.size())
+			Integer randomTarget = r.nextInt(p.size());
 			
 			// (2c) Pick a random planet as target
 			dest = p.get(randomTarget);
