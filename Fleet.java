@@ -1,3 +1,7 @@
+/* A fleet is a group of ships flying from one planet to the other.
+   For Week 1 we don't need it.
+*/
+
 public class Fleet implements Comparable, Cloneable {
     // Initializes a fleet.
     public Fleet(int owner,
@@ -31,6 +35,7 @@ public class Fleet implements Comparable, Cloneable {
 	return owner;
     }
 
+	
     public int NumShips() {
 	return numShips;
     }

@@ -1,4 +1,4 @@
-// Contestants do not need to worry about anything in this file. This is just
+// You do not need to worry about anything in this file. This is just
 // helper code that does the boring stuff for you, so you can focus on the
 // interesting stuff. That being said, you're welcome to change anything in
 // this file if you know what you're doing.
