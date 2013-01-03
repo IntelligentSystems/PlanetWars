@@ -17,7 +17,8 @@ var Visualizer = {
       planet_pixels: [10,13,18,21,23,29],
       showFleetText: true,
       display_margin: 50,
-      turnsPerSecond: 8,
+      turnsPerSecond: 12,
+      maxVisualizationTime: 100,//in seconds 
       teamColor: ['#455','#c00','#7ac']
     },
     
@@ -221,8 +222,13 @@ var Visualizer = {
         return;
       }
       this.drawFrame(this.frame);
-      
-      var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / this.config.turnsPerSecond )
+      var turnsPerSecond = this.config.turnsPerSecond;
+      if (this.moves.length / turnsPerSecond > this.config.maxVisualizationTime) {
+    	  //ok, increase turns per seconds, otherwise this may take ages.
+    	  turnsPerSecond = Math.ceil(this.moves.length / this.config.maxVisualizationTime);
+    	  console.log(this.moves.length + " " + this.config.turnsPerSecond + " " + this.config.maxVisualizationTime);
+      }
+      var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / turnsPerSecond )
       if(isNaN(frameAdvance)){
         frameAdvance = 0.3;
       }
