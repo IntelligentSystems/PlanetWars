@@ -70,7 +70,6 @@ public class Fleet implements Comparable, Cloneable {
 	}
     }
 
-    @Override
     public int compareTo(Object o) {
 	Fleet f = (Fleet)o;
 	return this.numShips - f.numShips;
