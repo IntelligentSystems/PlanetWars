@@ -18,7 +18,7 @@ var Visualizer = {
       showFleetText: true,
       display_margin: 50,
       turnsPerSecond: 12,
-      maxVisualizationTime: 100,//in seconds 
+      maxVisualizationTime: 60,//in seconds 
       teamColor: ['#455','#c00','#7ac']
     },
     
