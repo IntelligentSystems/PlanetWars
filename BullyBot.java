@@ -22,16 +22,24 @@ public class BullyBot {
 		// (2) Find the weakest enemy or neutral planet.
 		Planet dest = null;
 		double destScore = Double.MIN_VALUE;
-		for (Planet notMyPlanets : pw.NotMyPlanets()) {
+		for (Planet notMyPlanet : pw.NotMyPlanets()) {
 			//This score is one way of defining how 'bad' the other planet is. 
-			double score = (double) (1 + notMyPlanets.GrowthRate()) / notMyPlanets.NumShips();
+			//Avoiding dividing by zero.
+			double score = (double) (1 + notMyPlanet.GrowthRate()) / (notMyPlanet.NumShips()+Double.MIN_VALUE);
+			//if you want to debug how the score is computed, decomment the System.err.instructions
+			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
+			System.err.flush();
 			if (score > destScore) {
-				//The way the score is defined, is that the weaker a plannet is, the higher the score. 
+				//The way the score is defined, is that the weaker a planet is, the higher the score. 
 				//So again, we want to select the planet with the best score
 				destScore = score;
-				dest = notMyPlanets;
+				dest = notMyPlanet;
 			}
 		}
+		
+		System.err.println("Selected Planet: " +dest.PlanetID()+ " Score: "+ destScore);
+		System.err.flush();
+		
 		// (3) Attack!
 		if (source != null && dest != null) {
 			pw.IssueOrder(source, dest);
