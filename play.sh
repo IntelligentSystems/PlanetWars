@@ -9,5 +9,5 @@ NTURN=$5
 MAXT=$6
 
 
-java -jar tools/PlayGame.jar tools/maps/$MAP  "java $PLAYER1 " "java $PLAYER2 " $MODE $NTURN $MAXT   | python tools/visualizer/visualize_locally.py 2>log.txt
+java -jar tools/PlayGame.jar tools/maps/$MAP  "java $PLAYER1 " "java $PLAYER2 " $MODE $NTURN $MAXT   | python tools/visualizer/visualize_locally.py 
 

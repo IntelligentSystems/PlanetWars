@@ -11,14 +11,23 @@ public class BullyBot {
 		Planet source = null;
 		double sourceScore = Double.MIN_VALUE;
 		for (Planet myPlanet : pw.MyPlanets()) {
+			// skip planets with only one ship
+			if (myPlanet.NumShips() <= 1)
+				continue;
+			
 			//This score is one way of defining how 'good' my planet is. 
 			double score = (double) myPlanet.NumShips() / (1 + myPlanet.GrowthRate());
+			
+				
 			if (score > sourceScore) {
 				//we want to maximize the score, so store the planet with the best score
 				sourceScore = score;
 				source = myPlanet;
 			}
 		}
+		
+		
+		
 		// (2) Find the weakest enemy or neutral planet.
 		Planet dest = null;
 		double destScore = Double.MIN_VALUE;
@@ -27,8 +36,8 @@ public class BullyBot {
 			//Avoiding dividing by zero.
 			double score = (double) (1 + notMyPlanet.GrowthRate()) / (notMyPlanet.NumShips()+Double.MIN_VALUE);
 			//if you want to debug how the score is computed, decomment the System.err.instructions
-			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
-			System.err.flush();
+//			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
+//			System.err.flush();
 			if (score > destScore) {
 				//The way the score is defined, is that the weaker a planet is, the higher the score. 
 				//So again, we want to select the planet with the best score
@@ -37,8 +46,8 @@ public class BullyBot {
 			}
 		}
 		
-		System.err.println("Selected Planet: " +dest.PlanetID()+ " Score: "+ destScore);
-		System.err.flush();
+//		System.err.println("Selected Planet: " +dest.PlanetID()+ " Score: "+ destScore);
+//		System.err.flush();
 		
 		// (3) Attack!
 		if (source != null && dest != null) {

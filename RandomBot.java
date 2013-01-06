@@ -37,12 +37,9 @@ public class RandomBot {
 		// (2) Pick a target planet at random
 		Planet dest = null;
 
-		// (2a) Take the list of all planets
-		List<Planet> allPlanets = pw.Planets();
+		// (2a) Take the list of not my planets
+		List<Planet> allPlanets = pw.NotMyPlanets();
 
-		// Remove our 'source' planet from the list: using the same planet as 'source' and 'dest' is an invalid turn.
-		// As a result, you will skip this turn without any action.
-		allPlanets.remove(source);
 		if (allPlanets.size() > 0) {
 
 			// (2b) Pick a random integer in [0, number_of_all_planets]
