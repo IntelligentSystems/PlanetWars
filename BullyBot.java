@@ -1,12 +1,11 @@
 import java.util.*;
 
 /* A bit smarter kind of bot, who searches for its strongest planet and then attacks the weakest planet.
- The score is computed based on the number of ships and the inverse of the growth rate.
+ The score is computed based on the number of ships.
  */
 
 public class BullyBot {
 	public static void DoTurn(PlanetWars pw) {
-
 		// (1) Find my strongest planet.
 		Planet source = null;
 		double sourceScore = Double.MIN_VALUE;
@@ -16,9 +15,8 @@ public class BullyBot {
 				continue;
 			
 			//This score is one way of defining how 'good' my planet is. 
-			double score = (double) myPlanet.NumShips() / (1 + myPlanet.GrowthRate());
+			double score = (double) myPlanet.NumShips();
 			
-				
 			if (score > sourceScore) {
 				//we want to maximize the score, so store the planet with the best score
 				sourceScore = score;
@@ -26,28 +24,23 @@ public class BullyBot {
 			}
 		}
 		
-		
-		
 		// (2) Find the weakest enemy or neutral planet.
 		Planet dest = null;
-		double destScore = Double.MIN_VALUE;
+		double destScore = Double.MAX_VALUE;
 		for (Planet notMyPlanet : pw.NotMyPlanets()) {
 			//This score is one way of defining how 'bad' the other planet is. 
 			//Avoiding dividing by zero.
-			double score = (double) (1 + notMyPlanet.GrowthRate()) / (notMyPlanet.NumShips()+Double.MIN_VALUE);
+			double score = (double) (notMyPlanet.NumShips());
 			//if you want to debug how the score is computed, decomment the System.err.instructions
 //			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
 //			System.err.flush();
-			if (score > destScore) {
+			if (score < destScore) {
 				//The way the score is defined, is that the weaker a planet is, the higher the score. 
 				//So again, we want to select the planet with the best score
 				destScore = score;
 				dest = notMyPlanet;
 			}
 		}
-		
-//		System.err.println("Selected Planet: " +dest.PlanetID()+ " Score: "+ destScore);
-//		System.err.flush();
 		
 		// (3) Attack!
 		if (source != null && dest != null) {
