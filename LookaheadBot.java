@@ -4,6 +4,10 @@ import java.util.*;
  * It simulates the opponent using the BullyBot strategy and simulates the possible outcomes for any
  * choice of source and destination planets in the attack. The simulated outcome states are ranked by
  * the evaluation function, which returns the most promising one.
+ * 
+ * Improve this bot! Can you come up with smarter heuristics/scores? 
+ * And how does this code run against your bot from week1? How can you change this bot to better deal with your week1 bot? 
+ * Up until what point do you want to look ahead? Is there a smart way to make this more efficient?
  */
 
 public class LookaheadBot {
