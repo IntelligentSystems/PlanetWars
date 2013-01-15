@@ -1,7 +1,9 @@
 import java.util.*;
 
-/* A bit smarter kind of bot, who searches for its strongest planet and then attacks the weakest planet.
- The score is computed based on the number of ships.
+/** Another smarter kind of bot, which implements a minimax algorithm with look-ahead of two turns.
+ * It simulates the opponent using the BullyBot strategy and simulates the possible outcomes for any
+ * choice of source and destination planets in the attack. The simulated outcome states are ranked by
+ * the evaluation function, which returns the most promising one.
  */
 
 public class LookaheadBot {
@@ -11,8 +13,6 @@ public class LookaheadBot {
 		double score = Double.MIN_VALUE;		
 		Planet source = null;
 		Planet dest = null;
-		
-		List<Planet> result = new ArrayList<Planet>();
 	
 		
 		// We try to simulate each possible action and its outcome after two turns
@@ -20,17 +20,11 @@ public class LookaheadBot {
 		// and each enemy planet as a possible destination
 		for (Planet myPlanet: pw.MyPlanets()){
 			
-			System.err.println("Trying "+ myPlanet.PlanetID());
-			System.err.flush();
-			
 			//avoid planets with only one ship
 			if (myPlanet.NumShips() <= 1)
 				continue;		
 			
 			for (Planet notMyPlanet: pw.NotMyPlanets()){
-
-				System.err.println("Trying "+ myPlanet.PlanetID() + " -> "+ notMyPlanet.PlanetID());
-				System.err.flush();
 
 				// Create simulation environment - need to create one for each simulation
 				SimulatedPlanetWars simpw = createSimulation(pw);
@@ -58,16 +52,12 @@ public class LookaheadBot {
 					source = myPlanet;
 					dest = notMyPlanet;
 					
-					result = simpw.Planets();
 				}
 				
 			}
 		}
 		
-		System.err.println("Expected state:");
-		for (Planet p: result){
-			System.err.println(p.Owner() + " "+p.NumShips());
-		}
+		
 			
 		// Attack using the source and destinations that lead to the most promising state in the simulation
 		if (source != null && dest != null) {
@@ -137,23 +127,23 @@ public class LookaheadBot {
 	
 	/**
 	 * Create the simulation environment. Returns a SimulatedPlanetWars instance.
-	 * Call everytime you want a new simulation.
+	 * Call every time you want a new simulation environment.
 	 * @param The original PlanetWars object
 	 * @return SimulatedPlanetWars instance on which to simulate your attacks. Create a new one everytime you want to try alternative simulations.
 	 */
 	public static SimulatedPlanetWars createSimulation(PlanetWars pw){
-		return new LookaheadBot().new SimulatedPlanetWars(pw);
+		return dummyBot.new SimulatedPlanetWars(pw);
 	}
 	
 	
 	/**
 	 * Static LookaheadBot, used only to access SimulatedPlanetWars (DON'T CHANGE)
 	 */
-	//static LookaheadBot dummyBot = new LookaheadBot();
+	static LookaheadBot dummyBot = new LookaheadBot();
 	
 	/**
-	 * Class which provide the simulation environment, has same interface as PlanetWars (except for Fleets, that are not used).
-	 * @author saramagliacane
+	 * Class which provide the simulation environment, has same interface as PlanetWars 
+	 * (except for Fleets, that are not used).
 	 *
 	 */
 	public class SimulatedPlanetWars{
