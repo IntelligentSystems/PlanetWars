@@ -7,9 +7,9 @@ import java.util.*;
  * 
  * Try to improve this bot. For example, you can try to answer some of this questions. 
  * Can you come up with smarter heuristics/scores for the evaluation function? 
- * What is happens if you run this bot against your bot from week1? 
- * How can you change this bot to better deal with your week1 bot? 
- * Can you extend this skeleton to look ahead more than two turns? How many turns do you want to look ahead?
+ * What happens if you run this bot against your bot from week1? 
+ * How can you change this bot to beat your week1 bot? 
+ * Can you extend the bot to look ahead more than two turns? How many turns do you want to look ahead?
  * Is there a smart way to make this more efficient?
  */
 
