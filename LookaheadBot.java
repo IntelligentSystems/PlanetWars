@@ -1,6 +1,7 @@
 import java.util.*;
 
-/* A bit smarter kind of bot, who simulates two turns of look-ahead.
+/* A bit smarter kind of bot, who searches for its strongest planet and then attacks the weakest planet.
+ The score is computed based on the number of ships.
  */
 
 public class LookaheadBot {
@@ -11,17 +12,26 @@ public class LookaheadBot {
 		Planet source = null;
 		Planet dest = null;
 		
+		List<Planet> result = new ArrayList<Planet>();
+	
+		
 		// We try to simulate each possible action and its outcome after two turns
 		// considering each of my planets as a possible source 
 		// and each enemy planet as a possible destination
 		for (Planet myPlanet: pw.MyPlanets()){
+			
+			System.err.println("Trying "+ myPlanet.PlanetID());
+			System.err.flush();
 			
 			//avoid planets with only one ship
 			if (myPlanet.NumShips() <= 1)
 				continue;		
 			
 			for (Planet notMyPlanet: pw.NotMyPlanets()){
-								
+
+				System.err.println("Trying "+ myPlanet.PlanetID() + " -> "+ notMyPlanet.PlanetID());
+				System.err.flush();
+
 				// Create simulation environment - need to create one for each simulation
 				SimulatedPlanetWars simpw = createSimulation(pw);
 				
@@ -47,9 +57,16 @@ public class LookaheadBot {
 					score = scoreMax;
 					source = myPlanet;
 					dest = notMyPlanet;
+					
+					result = simpw.Planets();
 				}
 				
 			}
+		}
+		
+		System.err.println("Expected state:");
+		for (Planet p: result){
+			System.err.println(p.Owner() + " "+p.NumShips());
 		}
 			
 		// Attack using the source and destinations that lead to the most promising state in the simulation
@@ -90,6 +107,7 @@ public class LookaheadBot {
 	
 	// don't change this
 	public static void main(String[] args) {
+		
 		String line = "";
 		String message = "";
 		int c;
@@ -124,14 +142,14 @@ public class LookaheadBot {
 	 * @return SimulatedPlanetWars instance on which to simulate your attacks. Create a new one everytime you want to try alternative simulations.
 	 */
 	public static SimulatedPlanetWars createSimulation(PlanetWars pw){
-		return dummyBot.new SimulatedPlanetWars(pw);
+		return new LookaheadBot().new SimulatedPlanetWars(pw);
 	}
 	
 	
 	/**
 	 * Static LookaheadBot, used only to access SimulatedPlanetWars (DON'T CHANGE)
 	 */
-	static LookaheadBot dummyBot = new LookaheadBot();
+	//static LookaheadBot dummyBot = new LookaheadBot();
 	
 	/**
 	 * Class which provide the simulation environment, has same interface as PlanetWars (except for Fleets, that are not used).
@@ -140,12 +158,10 @@ public class LookaheadBot {
 	 */
 	public class SimulatedPlanetWars{
 
-		List<Planet> planets;
+		List<Planet> planets = new ArrayList<Planet>();
 		
 		public SimulatedPlanetWars(PlanetWars pw) {
 
-			// Make a copy of the planets on which you'll simulate
-			List<Planet> planets = new ArrayList<Planet>();
 			for (Planet planet: pw.Planets()){
 				planets.add(planet);
 			}
