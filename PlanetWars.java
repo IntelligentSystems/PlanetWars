@@ -156,13 +156,9 @@ public class PlanetWars {
     // Sends an order to the game engine. An order is composed of a source
     // planet number, a destination planet number, and a number of ships. A
     // few things to keep in mind:
-    //   * you can issue many orders per turn if you like.
     //   * the planets are numbered starting at zero, not one.
-    //   * you must own the source planet. If you break this rule, the game
-    //     engine kicks your bot out of the game instantly.
+    //   * you must own the source planet. If you break this rule, you skip this turn
     //   * you can't move more ships than are currently on the source planet.
-    //   * the ships will take a few turns to reach their destination. Travel
-    //     is not instant. See the Distance() function for more info.
       
     // NOTICE: modified to always send half the number of ships on source planet.
 
