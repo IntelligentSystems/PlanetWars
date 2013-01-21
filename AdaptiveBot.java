@@ -1,41 +1,44 @@
 import java.util.*;
 
-/* A more generic kind of bot, which adapts its behaviour according to the environment status.
- * It needs some previously collected knowledge about the environment (e.g. number of neutral planets in the map,
- * number of ships, etc.) and what strategy performs better in these conditions. This knowledge has to be 
- * collected beforehand (running a number of simulations of your bots in these environments) and manually coded 
- * in a data structure. Then, the DoTurn method can query it to know what strategy should be used in this turn. In 
- * this example we provide two environment variables: number of neutral planets in the map, and average growth
- * ratio of all planets in the map.
+/* A bot which adapts its behaviour according to the environment characteristics.
+ * It changes its strategy, based on the current environment (e.g. number of neutral planets in the map,
+ * number of ships, etc.). Knowing which strategy to use has to be collected beforehand.
+ * This requires running a number of games of your bots, and evaluate which bot performs best for a certain environment.
+ * You should then add this to the data structure (in AdaptivityMap.java). 
+ * The DoTurn method can then query this data structure to know what strategy should be used for this turn. 
+ * This example provides two environment variables: the number of neutral planets on the map, and average growth
+ * ratio of all planets on the map.
  * 
  * We provide a possible implementation using the hash adaptivityMap, which maps lists of integers (representing 
  * the environment) with names of bots. See AdaptivityMap.java
  * 
- * Complete this bot:
- * 1. Modify/extend the list of environment variables you consider interesting for adaptivity
- * 2. Collect data on how all your previous bots (BullyBot, RandomBot, HillclimbingBot, LookaheadBot and/or others) 
- * 	  perform in all maps
- * 3. Code these data in AdaptivityMap.java
- * 4. Complete the DoTurn method, adding all your previous bot implementations 
+ * Interesting questions (you can probably come up with other questions yourself as well):
+ * 1. Can you modify or extend the environment variables we use? Maybe other things are interesting other than the number of neutral planets, and the average planet size.
+ * 2. The table in AdaptivityMap.java is filled by us (randomly) with only two simple bots. But how should the table really look like? 
+ * This means you should collect data on how all your previous bots (BullyBot, RandomBot, HillclimbingBot, LookaheadBot and/or others) perform in different environments
+ * 3. Can you implement your other bot implementations in AdaptiveBot.java? Currently the only strategies are BullyBot ('DoBullyBotTurn') and RandomBot ('DoRandomBotTurn').
+ * Implement the bot strategies you used to fill AdaptivityMap.java here as well.
  */
 
 public class AdaptiveBot {
 	
+	/**
+	 * The main method for issuing your commands. Here, the best strategy is selected depending on the environment characteristics
+	 * @param pw
+	 */
 	public static void DoTurn(PlanetWars pw) {
 				
-		//Retrieve environment status
+		//Retrieve environment characteristics
+		//Are there characteristics you want to use instead, or are there more you'd like to use? Try it out!
 		int neutralPlanets = pw.NeutralPlanets().size();
-		int planetsSize = 0;
+		int totalPlanetSize = 0;
 		for (Planet p : pw.Planets()) {
-			planetsSize += p.GrowthRate();
+			totalPlanetSize += p.GrowthRate();
 		}
-		planetsSize = planetsSize/pw.Planets().size();
+		int averagePlanetSize = Math.round(totalPlanetSize/pw.Planets().size());
 			
-		//Query AdaptivityMap to get which bot matches this status 
-		String thisTurnBot = AdaptivityMap.get(neutralPlanets, planetsSize);
-		//System.err.println("Neutral planets: " + neutralPlanets);
-		//System.err.println("Planets size: " + planetsSize);
-		//System.err.println("Selected bot: " + thisTurnBot);
+		//Use AdaptivityMap to get the bot which matches the current environment characteristics  
+		String thisTurnBot = AdaptivityMap.get(neutralPlanets, averagePlanetSize);
 		
 		if (thisTurnBot == null) {
 			System.err.println("WARNING: You have not entered bot data for this case. Using default bot");
@@ -55,15 +58,18 @@ public class AdaptiveBot {
 		}
 	}
 	
+	/**
+	 * Implementation of the bullybot strategy (copy pasted from the regular BullyBot.java)
+	 * @param pw
+	 */
 	public static void DoBullyBotTurn(PlanetWars pw) {
 		Planet source = null;
 		double sourceScore = Double.MIN_VALUE;
+		//Select my strongest planet to send ships from
 		for (Planet myPlanet : pw.MyPlanets()) {
 			if (myPlanet.NumShips() <= 1)
 				continue;
-			
 			double score = (double) myPlanet.NumShips();
-			
 			if (score > sourceScore) {
 				sourceScore = score;
 				source = myPlanet;
@@ -72,6 +78,7 @@ public class AdaptiveBot {
 		
 		Planet dest = null;
 		double destScore = Double.MAX_VALUE;
+		//Select weakest destination planet
 		for (Planet notMyPlanet : pw.NotMyPlanets()) {
 			double score = (double) (notMyPlanet.NumShips());
 
@@ -86,21 +93,25 @@ public class AdaptiveBot {
 		}
 	}
 	
+	/**
+	 * Implementation of the RandomBot strategy (copy pasted from the regular RandomBot.java)
+	 * @param pw
+	 */
 	public static void DoRandomBotTurn(PlanetWars pw) {
 
 		Random random = new Random();
+		
 		Planet source = null;
 		List<Planet> myPlanets = pw.MyPlanets();
-
+		//Randomly select source planet
 		if (myPlanets.size() > 0) {
 			Integer randomSource = random.nextInt(myPlanets.size());
 			source = myPlanets.get(randomSource);
 		}
 		
 		Planet dest = null;
-
 		List<Planet> allPlanets = pw.NotMyPlanets();
-
+		//Randomly select destication planets
 		if (allPlanets.size() > 0) {
 			Integer randomTarget = random.nextInt(allPlanets.size());
 			dest = allPlanets.get(randomTarget);
