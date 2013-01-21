@@ -4,19 +4,18 @@ import java.util.*;
  * It needs some previously collected knowledge about the environment (e.g. number of neutral planets in the map,
  * number of ships, etc.) and what strategy performs better in these conditions. This knowledge has to be 
  * collected beforehand (running a number of simulations of your bots in these environments) and manually coded 
- * in a data structure. Then, the DoTurn method can use it to know what strategy should be used in this turn. In 
+ * in a data structure. Then, the DoTurn method can query it to know what strategy should be used in this turn. In 
  * this example we provide two environment variables: number of neutral planets in the map, and average growth
  * ratio of all planets in the map.
  * 
  * We provide a possible implementation using the hash adaptivityMap, which maps lists of integers (representing 
- * the environmnent) with names of bots. Its first entry can be read as: "if the map has 0 neutral planets and
- * the average growth rate is 3, then use a RandomBot this turn".  
+ * the environment) with names of bots. See AdaptivityMap.java
  * 
  * Complete this bot:
- * 1. Extend the list of environment variables you consider interesting for adaptivity
+ * 1. Modify/extend the list of environment variables you consider interesting for adaptivity
  * 2. Collect data on how all your previous bots (BullyBot, RandomBot, HillclimbingBot, LookaheadBot and/or others) 
  * 	  perform in all maps
- * 3. Code these data in adaptivityMap
+ * 3. Code these data in AdaptivityMap.java
  * 4. Complete the DoTurn method, adding all your previous bot implementations 
  */
 
@@ -32,11 +31,11 @@ public class AdaptiveBot {
 		}
 		planetsSize = planetsSize/pw.Planets().size();
 			
-		//Access adaptivity map using this status as key
-		ArrayList<Integer> thisTurnKey = new ArrayList<Integer>();
-		thisTurnKey.add(neutralPlanets);
-		thisTurnKey.add(planetsSize);
-		String thisTurnBot = AdaptivityMap.get(thisTurnKey);
+		//Query AdaptivityMap to get which bot matches this status 
+		String thisTurnBot = AdaptivityMap.get(neutralPlanets, planetsSize);
+		//System.err.println("Neutral planets: " + neutralPlanets);
+		//System.err.println("Planets size: " + planetsSize);
+		//System.err.println("Selected bot: " + thisTurnBot);
 		
 		if (thisTurnBot == null) {
 			System.err.println("WARNING: You have not entered bot data for this case. Using default bot");
@@ -49,7 +48,7 @@ public class AdaptiveBot {
 				System.err.println("RandomBot is going to play this turn");
 				DoRandomBotTurn(pw);
 			} else {
-				System.err.println("WARNING: Adaptivity wants " + thisTurnBot +
+				System.err.println("WARNING: Adaptivity map wants " + thisTurnBot +
 									" to play this turn, but not implemented. Using default bot");
 				DoRandomBotTurn(pw);
 			}
