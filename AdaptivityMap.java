@@ -2,9 +2,9 @@ import java.util.*;
 
 /* An adaptivity map implementation.
  * 
- * In this example, we provide two environment parameters (number of neutral planets, average growth ratio), and we match them to a specific bot. 
+ * In this example, we provide two environment parameters (number of neutral planets, average growth ratio of neutral planets), and we match them to a specific bot. 
  * The first upper left element of the botValue can be read as: "given that the map has 0 neutral planets
- * and that the average growth rate of all planets in the map is 0, then use the RandomBot"; the next element to the right: "given
+ * and that the average growth rate of the neutral planets in the map is 0, then use the RandomBot"; the next element to the right: "given
  * 0 neutral planets and an average growth of 1, use BullyBot; one down the upper left: given 1 neutral planet and average growth
  * 0, use RandomBot". The given example is random and does not have to be smart at all. We recommend start editing this array to 
  * get used to adaptivity and discover which other features would make your bot more smartly adaptive. * 

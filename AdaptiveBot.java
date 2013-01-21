@@ -6,14 +6,14 @@ import java.util.*;
  * This requires running a number of games of your bots, and evaluate which bot performs best for a certain environment.
  * You should then add this to the data structure (in AdaptivityMap.java). 
  * The DoTurn method can then query this data structure to know what strategy should be used for this turn. 
- * This example provides two environment variables: the number of neutral planets on the map, and average growth
- * ratio of all planets on the map.
+ * This example provides two environment variables: the number of neutral planets on the map, and the average growth
+ * ratio of these neutral planets.
  * 
  * We provide a possible implementation using the hash adaptivityMap, which maps lists of integers (representing 
  * the environment) with names of bots. See AdaptivityMap.java
  * 
  * Interesting questions (you can probably come up with other questions yourself as well):
- * 1. Can you modify or extend the environment variables we use? Maybe other things are interesting other than the number of neutral planets, and the average planet size.
+ * 1. Can you modify or extend the environment variables we use? Maybe other things are interesting other than the number of neutral planets, and the average planet size of these neutral planets.
  * 2. The table in AdaptivityMap.java is filled by us (randomly) with only two simple bots. But how should the table really look like? 
  * This means you should collect data on how all your previous bots (BullyBot, RandomBot, HillclimbingBot, LookaheadBot and/or others) perform in different environments
  * 3. Can you implement your other bot implementations in AdaptiveBot.java? Currently the only strategies are BullyBot ('DoBullyBotTurn') and RandomBot ('DoRandomBotTurn').
@@ -32,10 +32,10 @@ public class AdaptiveBot {
 		//Are there characteristics you want to use instead, or are there more you'd like to use? Try it out!
 		int neutralPlanets = pw.NeutralPlanets().size();
 		int totalPlanetSize = 0;
-		for (Planet p : pw.Planets()) {
+		for (Planet p : pw.NeutralPlanets()) {
 			totalPlanetSize += p.GrowthRate();
 		}
-		int averagePlanetSize = Math.round(totalPlanetSize/pw.Planets().size());
+		int averagePlanetSize = Math.round(totalPlanetSize/pw.NeutralPlanets().size());
 			
 		//Use AdaptivityMap to get the bot which matches the current environment characteristics  
 		String thisTurnBot = AdaptivityMap.get(neutralPlanets, averagePlanetSize);
@@ -52,7 +52,7 @@ public class AdaptiveBot {
 				DoRandomBotTurn(pw);
 			} else {
 				System.err.println("WARNING: Adaptivity map wants " + thisTurnBot +
-									" to play this turn, but not implemented. Using default bot");
+									" to play this turn, but this strategy is not implemented in this bot! Using default bot");
 				DoRandomBotTurn(pw);
 			}
 		}
