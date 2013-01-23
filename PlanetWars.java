@@ -9,6 +9,7 @@ import java.util.*;
 import java.io.*;
 
 public class PlanetWars {
+	public PlanetWars(){} //just an empty constructor for cloning purposes
     // Constructs a PlanetWars object instance, given a string containing a
     // description of a game state.
     public PlanetWars(String gameStateString) {
