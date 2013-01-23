@@ -318,4 +318,16 @@ public class PlanetWars {
     // planets and fleets, would we!?
     private ArrayList<Planet> planets;
     private ArrayList<Fleet> fleets;
+    
+    public String toString() {
+    	StringBuilder s = new StringBuilder();
+		for (Planet p : planets) {
+			// We can't use String.format here because in certain locales, the ,
+			// and . get switched for X and Y (yet just appending them using the
+			// default toString methods apparently doesn't switch them?)
+			s.append("P " + p.X() + " " + p.Y() + " " + p.Owner() + " " + p.NumShips() + " " + p.GrowthRate() + "\n");
+
+		}
+		return s.toString();
+    }
 }
