@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /*
@@ -79,7 +81,11 @@ public class RandomBot {
 				}
 			}
 		} catch (Exception e) {
-
+			StringWriter writer = new StringWriter();
+			e.printStackTrace(new PrintWriter(writer));
+			String stackTrace = writer.toString();
+			System.err.println(stackTrace);
+			System.exit(1); //just stop now. we've got a problem
 		}
 	}
 }

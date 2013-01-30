@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /* A bit smarter kind of bot, who searches for its strongest planet and then attacks the weakest planet.
@@ -72,7 +74,11 @@ public class BullyBot {
 				}
 			}
 		} catch (Exception e) {
-			// Owned.
+			StringWriter writer = new StringWriter();
+			e.printStackTrace(new PrintWriter(writer));
+			String stackTrace = writer.toString();
+			System.err.println(stackTrace);
+			System.exit(1); //just stop now. we've got a problem
 		}
 	}
 }
