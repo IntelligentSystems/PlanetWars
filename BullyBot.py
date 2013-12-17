@@ -33,8 +33,8 @@ def DoTurn(pw):
       source = my_planet
 
   # (2) Find the weakest enemy or neutral planet (lowest score).
-  # Put a very low value as the initial source score.
-  dest_score = -999999.0
+  # Put a very high value as the initial dest score.
+  dest_score = +999999.0
 
   for not_my_planet in pw.NotMyPlanets():
     # Store the score of the current planet, i.e. the number of its ships.
