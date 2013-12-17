@@ -230,25 +230,25 @@ public class LookaheadBot {
 						continue;
 					
 					//This score is one way of defining how 'good' my planet is. 
-					double scoreMin = (double) planet.NumShips();
+					double scoreMax = (double) planet.NumShips();
 					
-					if (scoreMin > sourceScore) {
+					if (scoreMax > sourceScore) {
 						//we want to maximize the score, so store the planet with the best score
-						sourceScore = scoreMin;
+						sourceScore = scoreMax;
 						source = planet;
 					}
 				}	
 				
 				// (2) Find the weakest enemy or neutral planet.
 				if(planet.Owner() != 2){
-					double scoreMax = (double) (planet.NumShips());
+					double scoreMin = (double) (planet.NumShips());
 					//if you want to debug how the score is computed, decomment the System.err.instructions
 		//			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
 		//			System.err.flush();
-					if (scoreMax < destScore) {
+					if (scoreMin < destScore) {
 						//The way the score is defined, is that the weaker a planet is, the higher the score. 
 						//So again, we want to select the planet with the best score
-						destScore = scoreMax;
+						destScore = scoreMin;
 						dest = planet;
 					}
 				}

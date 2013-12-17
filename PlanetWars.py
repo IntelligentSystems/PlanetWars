@@ -80,8 +80,10 @@ class Planet:
       return self._owner
     self._owner = new_owner
 
-  def NumShips(self):
-    return self._num_ships
+  def NumShips(self, new_num_ships=None):
+    if new_num_ships == None:
+      return self._num_ships
+    self._num_ships = new_num_ships
     
   def GrowthRate(self):
     return self._growth_rate
@@ -339,7 +341,7 @@ class PlanetWars:
     return 1
   
   def __str__(self):
-    ToString()
+    self.ToString()
 
   def ToString(self):
     """ Print the string representing the planets and fleets.   
