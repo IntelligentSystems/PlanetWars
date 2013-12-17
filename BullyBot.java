@@ -30,15 +30,14 @@ public class BullyBot {
 		Planet dest = null;
 		double destScore = Double.MAX_VALUE;
 		for (Planet notMyPlanet : pw.NotMyPlanets()) {
-			//This score is one way of defining how 'bad' the other planet is. 
-			//Avoiding dividing by zero.
+			//This score is one way of defining how 'good' the planet is. 
+			// You can change it to something different and experiment with it.
 			double score = (double) (notMyPlanet.NumShips());
 			//if you want to debug how the score is computed, decomment the System.err.instructions
 //			System.err.println("Planet: " +notMyPlanet.PlanetID()+ " Score: "+ score);
 //			System.err.flush();
 			if (score < destScore) {
-				//The way the score is defined, is that the weaker a planet is, the higher the score. 
-				//So again, we want to select the planet with the best score
+				//We want to select the planet with the lowest score
 				destScore = score;
 				dest = notMyPlanet;
 			}
