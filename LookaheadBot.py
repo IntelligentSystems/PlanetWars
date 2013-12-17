@@ -38,19 +38,19 @@ def DoTurn(pw):
       simulated_pw = SimulatedPlanetWars(pw)
 
       # (1) simulate my turn with the current couple of source and destination
-      simulated_pw.simulate_attack(my_planet, not_my_planet)
+      simulated_pw.SimulateAttack(my_planet, not_my_planet)
       # (2) simulate the growth of ships that happens in each turn
-      simulated_pw.simulate_growth()
+      simulated_pw.SimulateGrowth()
 
       # (3) simulate the opponent's turn, assuming that the opponent is the BullyBot   
       # here you can add other opponents.
-      simulated_pw.simulate_bully_bot()
+      simulated_pw.SimulateBullyBot()
       # (4) simulate the growth of ships that happens in each turn
-      simulated_pw.simulate_growth()
+      simulated_pw.SimulateGrowth()
       
       # (5) evaluate how the current simulated state is
       # here you can change how a state is evaluated as good
-      scoreMax = simulated_pw.evaluateState();
+      scoreMax = simulated_pw.EvaluateState();
 
       #(6) find the planet with the maximum evaluated score
       # this is the most promising future state
@@ -80,7 +80,7 @@ class SimulatedPlanetWars:
     for p in original_pw.Planets():
       self._planets.append(p.clone())
 
-  def simulate_growth(self):
+  def SimulateGrowth(self):
     """Simulates the growth of all the non neutral planets."""
     for p in self._planets:
       if p.Owner() == 0:
@@ -89,10 +89,10 @@ class SimulatedPlanetWars:
       p.NumShips(p.NumShips() + p.GrowthRate())
 
 
-  def simulate_attack(self, source, dest, player_id = 1):
-    self.simulate_attack_by_id(source.PlanetID(), dest.PlanetID(), player_id)
+  def SimulateAttack(self, source, dest, player_id = 1):
+    self.SimulateAttackById(source.PlanetID(), dest.PlanetID(), player_id)
 
-  def simulate_attack_by_id(self, source_id, dest_id, player_id = 1):
+  def SimulateAttackById(self, source_id, dest_id, player_id = 1):
     """Simulates the attack by player_id from planet source to planet dest."""
     source = self._planets[source_id]
     dest = self._planets[dest_id]
@@ -112,7 +112,7 @@ class SimulatedPlanetWars:
       remaining_ships = abs(dest.NumShips() - sent_ships)
       dest.NumShips(remaining_ships)
 
-  def simulate_bully_bot(self):  
+  def SimulateBullyBot(self):  
     # The source variable will contain the planet from which we send the ships.
     source = None 
 
@@ -150,9 +150,9 @@ class SimulatedPlanetWars:
 
     #(3) Simulate attack.
     if (not source is None and not dest is None) :
-      self.simulate_attack(source, dest, 2)
+      self.SimulateAttack(source, dest, 2)
 
-  def evaluateState(self):
+  def EvaluateState(self):
     """ Evaluates how promising a simulated state is.
 
     CHANGE HERE: 
