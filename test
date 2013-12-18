@@ -1,0 +1,11 @@
+import PlanetWars
+import LookaheadBot
+pw = PlanetWars.PlanetWars("")
+p1 = PlanetWars.Planet(0,0,100,10,1,10)
+p2 = PlanetWars.Planet(1,1,10,10,1,10)
+p3 = PlanetWars.Planet(2,2,100,10,1,10)
+p4 = PlanetWars.Planet(3,2,100,10,1,10)
+pw._planets = [p1, p2, p3, p4]
+simpw = LookaheadBot.SimulatedPlanetWars(pw)
+simpw.simulate_growth()
+simpw.simulate_attack(p2, p3)
