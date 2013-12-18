@@ -22,9 +22,10 @@
 """
 # Import the PlanetWars class from the PlanetWars module.
 from PlanetWars import PlanetWars
-#from AdaptivityMap import AdaptivityMap
-# import RandomBot
-# import BullyBot
+from AdaptivityMap import AdaptivityMap
+import RandomBot
+import BullyBot
+import LookaheadBot
 
 def DoTurn(pw):  
   # Retrieve environment characteristics - features you can use to decide which bot to use for that specific map.
@@ -34,23 +35,25 @@ def DoTurn(pw):
   average_growth_rate = 0
   for p in pw.NeutralPlanets():
     average_growth_rate += p.GrowthRate()
-  average_growth_rate = average_growth_rate / 1 + len(pw.NeutralPlanets())
+  if num_neutral_planets > 0:
+    average_growth_rate = average_growth_rate / num_neutral_planets
 
-  # adaptivity_map = AdaptivityMap()
+  adaptivity_map = AdaptivityMap()
   # # Use AdaptivityMap to get the bot which matches the current environment characteristics  
-  # this_turn_bot = adaptivity_map.getBestBot(num_neutral_planets, 
-  #                                         average_growth_rate)
+  this_turn_bot = adaptivity_map.getBestBot(num_neutral_planets, average_growth_rate)
     
-  # if this_turn_bot is None:
-  #   # There is no entry for the specified num_neutral_planets and average_growth_rate.
-  #   RandomBot.DoTurn(pw)
-  # elif this_turn_bot == "BullyBot":
-  #   BullyBot.DoTurn(pw)
-  # elif this_turn_bot == "RandomBot":
-  #   RandomBot.DoTurn(pw)
-  # else:
-  #   # The bot in the entry is not supported yet.
-  #   RandomBot.DoTurn(pw)
+  if this_turn_bot is None:
+    # There is no entry for the specified num_neutral_planets and average_growth_rate.
+    RandomBot.DoTurn(pw)
+  elif this_turn_bot == 'BullyBot':
+    BullyBot.DoTurn(pw)
+  elif this_turn_bot == 'RandomBot':
+    RandomBot.DoTurn(pw)
+  elif this_turn_bot == 'LookaheadBot':
+    LookaheadBot.DoTurn(pw)
+  else:
+    # The bot in the entry is not supported yet.
+    RandomBot.DoTurn(pw)
 
 
 # Don't change from this point on. Also not necessary to understand all the details.

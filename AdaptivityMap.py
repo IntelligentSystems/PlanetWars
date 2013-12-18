@@ -32,7 +32,7 @@ botValue = [ # average growth ratio (planet size) of
 "RandomBot", "BullyBot", "BullyBot", "RandomBot", "BullyBot", "RandomBot",# ...
 "RandomBot", "BullyBot", "BullyBot", "RandomBot", "BullyBot", "BullyBot",
 "RandomBot", "BullyBot", "RandomBot", "RandomBot", "BullyBot", "RandomBot",
-"RandomBot", "BullyBot", "BullyBot", "BullyBot", "BullyBot", "BullyBot",
+"LookaheadBot", "LookaheadBot", "LookaheadBot", "BullyBot", "BullyBot", "BullyBot",
 "RandomBot", "BullyBot", "BullyBot", "RandomBot", "RandomBot", "RandomBot",
 "BullyBot",  "BullyBot", "RandomBot", "BullyBot", "BullyBot", "BullyBot",
 "RandomBot", "BullyBot", "BullyBot", "RandomBot", "BullyBot", "RandomBot",
@@ -64,8 +64,10 @@ class AdaptivityMap():
 		    self.adaptive_map[num_neutral_planets][average_growth_rate] = \
 		    	botValue[num_neutral_planets * (MAX_GROWTH_RATE + 1) + average_growth_rate]
 
-	def getBestBot (num_neutral_planets, average_growth_rate):
+	def getBestBot(self, num_neutral_planets, average_growth_rate):
 		if (num_neutral_planets not in self.adaptive_map):
+			return None
+		if (average_growth_rate not in self.adaptive_map[num_neutral_planets]):
 			return None
 		return self.adaptive_map[num_neutral_planets][average_growth_rate]
   
