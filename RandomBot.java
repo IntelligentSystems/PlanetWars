@@ -26,9 +26,11 @@ public class RandomBot {
 		// (1a) Take the list of my planets
 		List<Planet> myPlanets = pw.MyPlanets();
 
+		//An example debug statement. These statements are useful when you don't understand the behaviour of your bot.
+		pw.log("I have", myPlanets.size(), "planets. (example debug statement, you can remove or change me!)");
+
 		// (1b) If the list is not empty:
 		if (myPlanets.size() > 0) {
-
 			// (1c) Pick a random integer in [0, number_of_my_planets]
 			Integer randomSource = random.nextInt(myPlanets.size());
 

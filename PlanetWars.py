@@ -11,8 +11,7 @@ NOTICE: modified to always send half the number of ships on source planet.
 """
 
 from math import ceil, sqrt
-from sys import stdout
-
+import sys
 
 class Fleet:
   """ A fleet is a group of ships flying from one planet to the other.
@@ -228,9 +227,9 @@ class PlanetWars:
       
     NOTICE: modified to always send half the number of ships on source planet.
     """
-    stdout.write("%d %d \n" % \
+    sys.stdout.write("%d %d \n" % \
      (source_planet_id, destination_planet_id))
-    stdout.flush()
+    sys.stdout.flush()
 
   def IssueOrder(self, source_planet, destination_planet):
     """ Sends an order to the game engine. 
@@ -249,8 +248,8 @@ class PlanetWars:
     """ Sends the game engine a message to let it know that we're done sending
         orders. This signifies the end of our turn.
     """
-    stdout.write("go\n")
-    stdout.flush()
+    sys.stdout.write("go\n")
+    sys.stdout.flush()
 
   def IsAlive(self, player_id):
     """ Returns true if the named player owns at least one planet or fleet.
@@ -343,6 +342,13 @@ class PlanetWars:
   def __str__(self):
     self.ToString()
 
+  def log(self, *args):
+    lst=[]
+    for arg in args:
+	  lst.append(str(arg))
+    lst.append('\n')#needed, otherwise line won't show in console
+    sys.stderr.write(' '.join(lst))
+  
   def ToString(self):
     """ Print the string representing the planets and fleets.   
     """

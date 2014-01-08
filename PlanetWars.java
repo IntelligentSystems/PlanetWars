@@ -319,6 +319,13 @@ public class PlanetWars {
     private ArrayList<Planet> planets;
     private ArrayList<Fleet> fleets;
     
+    public void log(Object... args) {
+		String output = "";
+		for (Object arg: args) {
+			output += arg + " ";
+		}
+		System.err.println(output);
+	}
     public String toString() {
     	StringBuilder s = new StringBuilder();
 		for (Planet p : planets) {

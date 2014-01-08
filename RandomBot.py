@@ -26,10 +26,13 @@ def DoTurn(pw):
 
   # Get a list of all my planets and store it in the variable my_planets. 
   my_planets = pw.MyPlanets()
-
+  
   # The number of planets I own is the length of this list.
   number_of_my_planets = len(my_planets)
-
+  
+  # An example debug statement. These statements are useful when you don't understand the behaviour of your bot.
+  pw.log("I have", number_of_my_planets, "planets. (example debug statement, you can remove or change me!)")
+  
   # If I own at least a planet, i.e. there is at least one planet in the list.
   if number_of_my_planets > 0:
     # Pick the index of a planet at random by choosing a random integer
