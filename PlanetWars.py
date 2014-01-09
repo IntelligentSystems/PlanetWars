@@ -348,6 +348,7 @@ class PlanetWars:
 	  lst.append(str(arg))
     lst.append('\n')#needed, otherwise line won't show in console
     sys.stderr.write(' '.join(lst))
+    sys.stderr.flush()
   
   def ToString(self):
     """ Print the string representing the planets and fleets.   
