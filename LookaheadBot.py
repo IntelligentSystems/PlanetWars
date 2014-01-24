@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-
+import sys
 """ LookaheadBot - Another smarter kind of bot, which implements a minimax algorithm with look-ahead of two turns.
  * It simulates the opponent using the BullyBot strategy and simulates the possible outcomes for any
  * choice of source and destination planets in the attack. The simulated outcome states are ranked by
@@ -16,54 +16,58 @@
 # Import the PlanetWars class from the PlanetWars module.
 from PlanetWars import PlanetWars
 
-def DoTurn(pw):  
-  # The source variable will contain the planet from which we send the ships.
-  source = None 
+def DoTurn(pw): 
+	try:
+	  # The source variable will contain the planet from which we send the ships.
+	  source = None 
 
-  # The dest variable will contain the destination, the planet to which we send the ships.
-  dest = None 
+	  # The dest variable will contain the destination, the planet to which we send the ships.
+	  dest = None 
 
-  # We try to simulate each possible action and its outcome after two turns
-  # considering each of my planets as a possible source 
-  # and each enemy planet as a possible destination.
-  score = -999999.0
+	  # We try to simulate each possible action and its outcome after two turns
+	  # considering each of my planets as a possible source 
+	  # and each enemy planet as a possible destination.
+	  score = -999999.0
 
-  for my_planet in pw.MyPlanets():
-    # Skip planets with only one ship
-    if my_planet.NumShips() <= 1:
-      continue
+	  for my_planet in pw.MyPlanets():
+		# Skip planets with only one ship
+		if my_planet.NumShips() <= 1:
+		  continue
 
-    for not_my_planet in pw.NotMyPlanets():
-      # Create simulation environment - need to create one for each simulation.
-      simulated_pw = SimulatedPlanetWars(pw)
+		for not_my_planet in pw.NotMyPlanets():
+		  # Create simulation environment - need to create one for each simulation.
+		  simulated_pw = SimulatedPlanetWars(pw)
 
-      # (1) simulate my turn with the current couple of source and destination
-      simulated_pw.SimulateAttack(my_planet, not_my_planet)
-      # (2) simulate the growth of ships that happens in each turn
-      simulated_pw.SimulateGrowth()
+		  # (1) simulate my turn with the current couple of source and destination
+		  simulated_pw.SimulateAttack(my_planet, not_my_planet)
+		  # (2) simulate the growth of ships that happens in each turn
+		  simulated_pw.SimulateGrowth()
 
-      # (3) simulate the opponent's turn, assuming that the opponent is the BullyBot   
-      # here you can add other opponents.
-      simulated_pw.SimulateBullyBot()
-      # (4) simulate the growth of ships that happens in each turn
-      simulated_pw.SimulateGrowth()
-      
-      # (5) evaluate how the current simulated state is
-      # here you can change how a state is evaluated as good
-      scoreMax = simulated_pw.EvaluateState();
+		  # (3) simulate the opponent's turn, assuming that the opponent is the BullyBot   
+		  # here you can add other opponents.
+		  simulated_pw.SimulateBullyBot()
+		  # (4) simulate the growth of ships that happens in each turn
+		  simulated_pw.SimulateGrowth()
+		  
+		  # (5) evaluate how the current simulated state is
+		  # here you can change how a state is evaluated as good
+		  scoreMax = simulated_pw.EvaluateState();
 
-      #(6) find the planet with the maximum evaluated score
-      # this is the most promising future state
-      if scoreMax > score:        
-        score = scoreMax
-        source = my_planet
-        dest = not_my_planet
+		  #(6) find the planet with the maximum evaluated score
+		  # this is the most promising future state
+		  if scoreMax > score:        
+			score = scoreMax
+			source = my_planet
+			dest = not_my_planet
 
-  #(3) Attack.
-  # If the source and dest variables contain actual planets, then 
-  # send half of the ships from source to dest.
-  if (not source is None and not dest is None) :
-    pw.IssueOrder(source, dest)
+	  #(3) Attack.
+	  # If the source and dest variables contain actual planets, then 
+	  # send half of the ships from source to dest.
+	  if (not source is None and not dest is None) :
+		pw.IssueOrder(source, dest)
+	except Exception, e:
+	  pw.log(e.message, e.__doc__)
+
 
 
 class SimulatedPlanetWars:
