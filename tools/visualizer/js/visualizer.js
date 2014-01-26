@@ -1,3 +1,9 @@
+//added code to: parseData, drawFrame and parserUtils
+//vars by Melvin
+var realTurnCounter = 0
+var realTurnLength = -1
+//end vars by Melvin
+
 var Visualizer = {
     canvas: null,
     ctx: null,
@@ -18,7 +24,7 @@ var Visualizer = {
       showFleetText: true,
       display_margin: 50,
       turnsPerSecond: 12,
-      maxVisualizationTime: 60,//in seconds 
+      maxVisualizationTime: 100,//in seconds 
       teamColor: ['#455','#c00','#7ac']
     },
     
@@ -31,6 +37,9 @@ var Visualizer = {
         // Parse data
         this.parseData(data);
         
+        //determine the real turn length - Melvin
+        realTurnLength = this.moves[Visualizer.moves.length-1].turn
+
         // Calculated configs
         this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / 24;
         
@@ -68,9 +77,22 @@ var Visualizer = {
         var disp_x = 0, disp_y = 0;
         var ctx = this.ctx;
         var frameNumber = Math.floor(frame);
-        
         var planetStats = this.moves[frameNumber].planets;
         var fleets = this.moves[frameNumber].moving;
+
+        //all this code helps to determine if something is a real turn - code by Melvin
+        if(frame == 1){
+          realTurnCounter = 0
+        }
+
+        if(frame == Visualizer.moves.length-1){
+          realTurnCounter = realTurnLength
+        }
+
+        if(this.moves[frameNumber].turn != -1){
+          realTurnCounter = this.moves[frameNumber].turn
+        }
+        //end code by Melvin
         
         this.drawBackground();
         
@@ -224,9 +246,10 @@ var Visualizer = {
       this.drawFrame(this.frame);
       var turnsPerSecond = this.config.turnsPerSecond;
       if (this.moves.length / turnsPerSecond > this.config.maxVisualizationTime) {
-    	  //ok, increase turns per seconds, otherwise this may take ages.
-    	  turnsPerSecond = Math.ceil(this.moves.length / this.config.maxVisualizationTime);
-    	  console.log(this.moves.length + " " + this.config.turnsPerSecond + " " + this.config.maxVisualizationTime);
+        //ok, increase turns per seconds, otherwise this may take ages.
+        turnsPerSecond = Math.ceil(this.moves.length / this.config.maxVisualizationTime);
+        //I switched the following off - Melvin
+        //console.log(this.moves.length + " " + this.config.turnsPerSecond + " " + this.config.maxVisualizationTime);
       }
       var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / turnsPerSecond )
       if(isNaN(frameAdvance)){
@@ -252,9 +275,8 @@ var Visualizer = {
     
     parseData: function(input) {
         input = input.split(/\n/);
-        
         var data;
-        if(input.length == 1) data = input[0];
+        if(input.length == 1) data = input[0]; //in normal games this will be invoked
         else {
             for(var i = 0; i < input.length; i++) {
                 var value = input[i].split('=');
@@ -268,18 +290,18 @@ var Visualizer = {
             }
         }
         
-        var data = data.split('|');
+        var data = data.split('|'); //splits it up in data[0]: planet objects and data[1]: turns.
         
         // planets: [(x,y,owner,numShips,growthRate)]
         this.planets = data[0].split(':').map(ParserUtils.parsePlanet);
         
         // insert planets as first move
         this.moves.push({
-           'planets': this.planets.map(function(a) { return {
-                owner: parseInt(a.owner),
-                numShips: parseInt(a.numShips)
-            }; }),
-           'moving': []
+           'planets': this.planets.map(function(a) { 
+              return { owner: parseInt(a.owner), numShips: parseInt(a.numShips) }; 
+          }),
+           'moving': [],
+           'turn': 1
         });
 
         // turns: [(owner,numShips)] 
@@ -289,16 +311,27 @@ var Visualizer = {
         } 
         var turns = data[1].split(':').slice(0,-1);
         for(var i = 0; i < turns.length; i++) {
+            
             var turn = turns[i].split(',');
             var move = {}
-            
             move.planets = turn.slice(0, this.planets.length).map(ParserUtils.parsePlanetState)
+
+            //if there are no fleets, then this is the new turn - Melvin
+            var potentialNewTurn = turn.slice(this.planets.length-1, this.planets.length).map(ParserUtils.parseTurn)[0]
+
             var fleet_strings = turn.slice(this.planets.length)
             if( fleet_strings.length == 1 && fleet_strings[0] == '' ){
-                fleet_strings = []
+              fleet_strings = []
+            }
+            if(fleet_strings.length == 1 && fleet_strings[0] != ''){
+              //if there are fleets, then this is the new turn
+              potentialNewTurn = fleet_strings.map(ParserUtils.parseTurn)[0]
+              fleet_strings[0] = fleet_strings[0].split(';')[0]
             }
             move.moving = fleet_strings.map(ParserUtils.parseFleet)
             
+            move.turn = potentialNewTurn+1 
+
             this.moves.push(move);
         }
     },
@@ -322,6 +355,7 @@ var ParserUtils = {
     
     parsePlanet: function(data) {
         data = data.split(',');
+        // no data[4].split(';')[0] needed, debug information shows it goes well
         // (x,y,owner,numShips,growthRate)
         return {
             x: parseFloat(data[0]),
@@ -332,13 +366,19 @@ var ParserUtils = {
         };
     },
     
-    parsePlanetState: function(data) {
+    parsePlanetState: function(data) { //the ;numTurn is left here - Melvin
         data = data.split('.');
         // (owner,numShips)
         return {
             owner: parseInt(data[0]),
             numShips: parseInt(data[1])
         };
+    },
+
+    parseTurn: function(data){ //If the turn is -1 then nothing happens, otherwise the turn has been incremented by 1 - Melvin
+      var data = data.split(';')
+      return (data[1] != null)?parseInt(data[1]):-2 
+      //should be -1 but one system counts from 0 to n-1 and the other from 1 to n
     },
     
     _eof: true
@@ -405,7 +445,7 @@ var ParserUtils = {
     })
     
     $('#display').bind('drawn', function(){
-      $('#turnCounter').text('Turn: '+Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length)
+      $('#turnCounter').text('Turn: '+realTurnCounter+' of '+realTurnLength)
     })
     
     $('.player1Name').html('<a href="profile.php?user_id=' + Visualizer.playerIds[0] + '">' + Visualizer.players[0] + '</a>')
